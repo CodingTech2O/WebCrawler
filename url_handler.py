@@ -6,8 +6,18 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse, urljoin
 from threading import Lock
 from cachetools import lru_cache
+import time
+from functools import wraps
 
 file_lock = Lock()
+def rate_limit(func):
+    @wraps(func) # This preserves the original function's name and docstring
+    def wrapper(*args, **kwargs):
+        time.sleep(1)           # The delay happens here, at execution time
+        return func(*args, **kwargs) # Then the actual function runs
+    
+    return wrapper
+
 
 @lru_cache
 def check_robots_txt(url):
@@ -35,7 +45,7 @@ def check_robots_txt(url):
         return []
 
 
-
+@rate_limit
 def fetch_url(url):
     response = requests.get(url, timeout=10)
     soup = BeautifulSoup(response.content, "html.parser")
