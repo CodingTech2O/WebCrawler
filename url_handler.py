@@ -8,16 +8,31 @@ from threading import Lock
 from cachetools import lru_cache
 import time
 from functools import wraps
+import threading
+
+class RateLimiter:
+    def __init__(self, delay=1):
+        self.delay = delay
+        self.last_request = 0
+        self.lock = threading.Lock()
+    
+    def wait(self):
+        with self.lock:  # Thread-safe
+            elapsed = time.time() - self.last_request
+            if elapsed < self.delay:
+                time.sleep(self.delay - elapsed)
+            self.last_request = time.time()
+
+limiter = RateLimiter(1)
+
 
 file_lock = Lock()
 def rate_limit(func):
-    @wraps(func) # This preserves the original function's name and docstring
+    @wraps(func)
     def wrapper(*args, **kwargs):
-        time.sleep(1)           # The delay happens here, at execution time
-        return func(*args, **kwargs) # Then the actual function runs
-    
+        limiter.wait()  # Use the shared thread-safe limiter
+        return func(*args, **kwargs)
     return wrapper
-
 
 @lru_cache
 def check_robots_txt(url):
