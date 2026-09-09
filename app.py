@@ -8,20 +8,21 @@ from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse, urljoin
 from threading import Lock
 from url_handler import *
-
+app = Flask(__name__)
+app.secret_key = os.getenv("SECRET_KEY")
+app.config["WTF_CSRF_ENABLED"] = False
 
 class URLForm(FlaskForm):
     url = StringField("URL", validators=[DataRequired()])
     submit = SubmitField("Submit")
 
 
-app = Flask(__name__)
-app.secret_key = os.getenv("SECRET_KEY")
+
 
 with open(r"data/urls.json", "r") as f:
     data = json.load(f)
 
-background_executor = ThreadPoolExecutor(max_workers=4)
+background_executor = ThreadPoolExecutor(max_workers=25)
 
 
 
