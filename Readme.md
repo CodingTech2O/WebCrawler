@@ -167,11 +167,7 @@ This project is primarily intended for learning and experimentation.
 Current limitations include:
 
 * JavaScript-rendered content is not supported
-* No robots.txt handling yet
-* No configurable crawl depth
-* No rate limiting
 * No retry/backoff system
-* HTML filename collisions are possible for some complex URLs
 * Crawling state is stored locally rather than in a database
 * Error handling could be expanded
 
@@ -179,18 +175,12 @@ Current limitations include:
 
 Planned improvements could include:
 
-* [ ] Crawl-depth configuration
-* [ ] Robots.txt support
-* [ ] Rate limiting
-* [ ] Retry with exponential backoff
+
 * [ ] Crawl statistics dashboard
 * [ ] Pause/resume crawling
 * [ ] Stop crawling button
-* [ ] URL queue visualization
-* [ ] SQLite/PostgreSQL storage
 * [ ] Export results to JSON/CSV
 * [ ] Better duplicate URL normalization
-* [ ] Sitemap support
 * [ ] JavaScript rendering with a browser engine
 * [ ] Unit tests
 * [ ] Docker support
