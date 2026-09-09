@@ -381,11 +381,8 @@ Some current limitations include:
 
 Possible improvements include:
 
-* [ ] Add `robots.txt` enforcement
-* [ ] Add configurable crawl depth
-* [ ] Add request rate limiting
+
 * [ ] Add automatic retry handling
-* [ ] Improve URL normalization
 * [ ] Add HTTP status-code tracking
 * [ ] Add crawl statistics
 * [ ] Add a crawler dashboard
