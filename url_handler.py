@@ -5,8 +5,34 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse, urljoin
 from threading import Lock
+from cachetools import lru_cache
 
 file_lock = Lock()
+
+@lru_cache
+def check_robots_txt(url):
+    robots = urljoin(url, "/robots.txt")
+
+    try:
+        response = requests.get(robots, timeout=10)
+        if response.status_code != 200:
+            return []
+
+        disallowed = []
+
+        for line in response.text.splitlines():
+            line = line.strip()
+
+            if line.lower().startswith("disallow:"):
+                path = line.split(":", 1)[1].strip()
+
+                if path:
+                    disallowed.append(path)
+
+        return disallowed
+
+    except requests.RequestException:
+        return []
 
 
 
@@ -87,7 +113,15 @@ def process_links(links, url):
 
                     if urlparse(link).netloc != domain:
                         continue
+                    z = True
+                    for i in check_robots_txt(url):
+                        if urlparse(link).path.startswith(i):
+                            z = False
+                    if not z:
+                       continue 
+
 
                     if link not in processed:
                         processed.add(link)
                         pending.append(link)
+
