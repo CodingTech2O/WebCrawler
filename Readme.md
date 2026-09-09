@@ -1,4 +1,4 @@
-````markdown
+
 # 🕷️ WebCrawler
 
 A full-featured web crawler built with **Python, Flask, Requests, BeautifulSoup, and ThreadPoolExecutor**.
@@ -572,9 +572,3 @@ If you plan to make the project open source for reuse, consider adding an approp
 
 > Crawl. Parse. Discover. Repeat.
 
-```
-
-I’d use **this version** rather than the earlier one because it matches what the repository currently exposes instead of accidentally advertising imaginary features. Your README was basically wearing a suit two sizes too small before. 💀 :contentReference[oaicite:1]{index=1}
-```
-
-[1]: https://github.com/CodingTech2O/WebCrawler "GitHub - CodingTech2O/WebCrawler: Full Fledged WebCrawler · GitHub"
