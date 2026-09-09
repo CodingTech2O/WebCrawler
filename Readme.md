@@ -110,6 +110,18 @@ python app.py
 
 The application will start locally. Open the address shown in your terminal in a browser.
 
+## To Run Tests
+
+### 1. Set path to root
+```
+set PYTHONPATH=root
+```
+
+### 2. Run
+```bash
+python tests\__init__.py
+```
+
 ## 🕸️ How It Works
 
 The crawler follows this general pipeline:

@@ -5,9 +5,8 @@ import json
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse, urljoin
 from threading import Lock
-from cachetools import lru_cache
 import time
-from functools import wraps
+from functools import wraps,lru_cache
 import threading
 
 class RateLimiter:
