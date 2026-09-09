@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crawling {{ url }}</title>
+<link rel="stylesheet" href="{{ url_for('static', filename='processing.css') }}">
+</head>
+<body>
+
+    <h1>Crawling {{ url }}</h1>
+
+    {% for i, j in zip(processed, links) %}
+        <a href="{{ url_for('download', url=url, filename=i) }}">
+            {{ i }}
+        </a>
+        <br>
+    {% endfor %}
+
+    <script>
+        setTimeout(() => {
+            location.reload();
+        }, 1000);
+    </script>
+
+</body>
+</html>
