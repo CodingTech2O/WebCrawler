@@ -1,14 +1,13 @@
-from flask import Flask, redirect, url_for, render_template,send_from_directory
-from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
-from wtforms.validators import DataRequired
+from flask import Flask, redirect, url_for, render_template,send_from_directory #type:ignore
+from flask_wtf import FlaskForm #type:ignore
+from wtforms import StringField, SubmitField #type:ignore
+from wtforms.validators import DataRequired #type:ignore
 import os
-import requests
-from bs4 import BeautifulSoup
 import json
 from concurrent.futures import ThreadPoolExecutor
 from urllib.parse import urlparse, urljoin
 from threading import Lock
+from url_handler import *
 
 
 class URLForm(FlaskForm):
@@ -22,91 +21,8 @@ app.secret_key = os.getenv("SECRET_KEY")
 with open(r"data/urls.json", "r") as f:
     data = json.load(f)
 
-file_lock = Lock()
 background_executor = ThreadPoolExecutor(max_workers=4)
 
-
-def fetch_url(url):
-    response = requests.get(url, timeout=10)
-    soup = BeautifulSoup(response.content, "html.parser")
-
-    links = []
-
-    for l in soup.find_all("a", href=True):
-        links.append(urljoin(url, l.get("href")))
-
-    domain = urlparse(url).netloc
-    base = f"data/{domain}"
-
-    os.makedirs(base, exist_ok=True)
-
-    with file_lock:
-        with open(f"{base}/processed.txt", "a", encoding="utf-8") as f:
-            f.write(url + "\n")
-
-    parsed = urlparse(url)
-    path = parsed.path.strip("/").replace("/", "_") or "index"
-    filename = path.replace("?", "_").replace("&", "_")
-
-    with open(f"{base}/{filename}.html", "w", encoding="utf-8") as f:
-        f.write(soup.prettify())
-
-    return links
-
-
-def process_links(links, url):
-    domain = urlparse(url).netloc
-    base = f"data/{domain}"
-
-    os.makedirs(base, exist_ok=True)
-
-    processed_path = f"{base}/processed.txt"
-
-    if os.path.exists(processed_path):
-        with open(processed_path, "r", encoding="utf-8") as f:
-            processed = set(f.read().splitlines())
-    else:
-        processed = set()
-
-    pending = []
-
-    for link in links:
-        if link.startswith("#"):
-            continue
-
-        if urlparse(link).netloc != domain:
-            continue
-
-        if link not in processed:
-            processed.add(link)
-            pending.append(link)
-
-    while pending:
-        batch = pending[:25]
-        pending = pending[25:]
-
-        with ThreadPoolExecutor(max_workers=25) as executor:
-            futures = [
-                executor.submit(fetch_url, link)
-                for link in batch
-            ]
-
-            for future in futures:
-                try:
-                    new_links = future.result()
-                except Exception:
-                    continue
-
-                for link in new_links:
-                    if link.startswith("#"):
-                        continue
-
-                    if urlparse(link).netloc != domain:
-                        continue
-
-                    if link not in processed:
-                        processed.add(link)
-                        pending.append(link)
 
 
 @app.route("/", methods=["GET", "POST"])
@@ -181,4 +97,4 @@ def download(url, filename):
     )
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
