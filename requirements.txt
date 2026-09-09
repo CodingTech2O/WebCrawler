@@ -1,0 +1,6 @@
+Flask
+Flask-WTF
+WTForms
+requests
+beautifulsoup4
+python-dotenv
