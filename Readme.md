@@ -555,13 +555,6 @@ Every star helps motivate further development.
 
 ---
 
-## 📜 License
-
-This project does not currently specify a license.
-
-If you plan to make the project open source for reuse, consider adding an appropriate license such as the MIT License.
-
----
 
 # 🕷️ WebCrawler
 
